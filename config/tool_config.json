@@ -7,7 +7,7 @@
     "mongo_database": {
     "uri": "@netmindcluster.ecihb0u.mongodb.net/?retryWrites=true&w=majority&appName=netMindCluster",
     "service": "mongodb+srv://",
-    "user": "petermekhail01",
+    "user": "",
     "password": "secure_password"
   },
     "local_cache": {
