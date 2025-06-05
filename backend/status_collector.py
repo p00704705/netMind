@@ -30,7 +30,7 @@ class Collector:
     def run_test_ping(self):
         network_state = {}
         for target in self.targets:
-            logging.info(f"==Pinging target: {target}==")
+            logging.info(f"== Pinging target: {target} ==")
             p = subprocess.Popen(self.ping_command+target , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             stdoutdata, stderrdata = p.communicate()
             #logging.info(f"stdoutdata: \n{stdoutdata}")

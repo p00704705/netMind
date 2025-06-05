@@ -18,6 +18,10 @@ logging.basicConfig(level=logging.DEBUG)
 class NmapScanner:
     def __init__(self,subnets):
         self.subnets = subnets
+    
+    def get_subnet_ips(self, subnet):
+        ip_list = [str(ip) for ip in ipaddress.IPv4Network(subnet).hosts()]
+        return ip_list
 
     def scan_network(self):
         scan_start_time = time.perf_counter()
@@ -26,7 +30,7 @@ class NmapScanner:
         logging.info(f"User input subnets are {self.subnets}")
         for subnet in self.subnets:
             logging.info(f"Scanning subnet {subnet}")
-            scan_output = nm.scan(subnet, arguments='-PR -sn')
+            scan_output = nm.scan(subnet, arguments='-PR -sn --max-retries 0')
             logging.info(f"Scan output for subnet {subnet} is {scan_output}\n")
             hosts_details = nm.all_hosts()
             logging.info(f"Hosts details for subnet {subnet} is {hosts_details}\n")

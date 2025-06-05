@@ -2,7 +2,8 @@ from status_collector import Collector
 from network_scanner import NmapScanner
 import json
 import logging
-
+import time
+from cache import RedisClient
 logging.basicConfig(level=logging.INFO)
 def print_netmind_small_ascii():
     print("""
@@ -23,14 +24,21 @@ def main():
     print("\U0001F600")
     config = json.load(open('../config/tool_config.json'))
     logging.info(f"Loading Configuration {config}")
+    network_stats = {}
     subnets = config["subnets"]
     subnets_scan_obj = NmapScanner(subnets).scan_network()
     for subnet in subnets:
         hosts_ips = subnets_scan_obj.get(subnet).get("hosts_ips")
-        #print("---------")
-        #print(hosts_ips)
+        print("---------")
+        print(hosts_ips)
         collector = Collector(hosts_ips)
-        collector.run_test_ping()
-
+        network_stats[subnet] = collector.run_test_ping()
+    redis_client = RedisClient(host='localhost', port=6379, db=0)
+    
+    redis_client.set_cache(key = "peter_latency_cache", data = network_stats, ttl=5)
+    redis_client.get_cache(key = "peter_latency_cache")
+    print("trying again after 3 seconds")
+    time.sleep(3)
+    redis_client.get_cache(key = "peter_latency_cache")
 if __name__ == "__main__":
     main()

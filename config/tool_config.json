@@ -1,14 +1,25 @@
 {
-  "database": {
+  "redis_local_cache": {
+    "host": "localhost",
+    "port": 6379,
+    "db": 0
+  },
+    "mongo_database": {
+    "uri": "@netmindcluster.ecihb0u.mongodb.net/?retryWrites=true&w=majority&appName=netMindCluster",
+    "service": "mongodb+srv://",
+    "user": "petermekhail01",
+    "password": "secure_password"
+  },
+    "local_cache": {
     "host": "192.168.1.100",
     "port": 5432,
     "user": "admin",
-    "password": "secure_password"
+    "password": ""
   },
   "api_keys": {
     "service1": "key1",
     "service2": "key2"
   },
-   "subnets":["192.168.1.0/24"],
+  "subnets":["192.168.1.0/24"],
   "debug": true
 }
