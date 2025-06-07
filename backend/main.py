@@ -4,6 +4,8 @@ import json
 import logging
 import time
 from cache import RedisClient
+import db_sql as sqldb
+
 logging.basicConfig(level=logging.INFO)
 def print_netmind_small_ascii():
     print("""
