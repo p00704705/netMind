@@ -40,5 +40,10 @@ def main():
     print("trying again after 3 seconds")
     time.sleep(3)
     redis_client.get_cache(key = "peter_latency_cache")
+    #redis_client.get_cache(key = "peter_latency_cache")
+    #print(network_stats)
+    sqldb.create_table()
+    sqldb.insert_network_stats(network_stats)
+    sqldb.fetch_all_stats()
 if __name__ == "__main__":
     main()
