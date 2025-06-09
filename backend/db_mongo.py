@@ -1,3 +1,5 @@
+from pymongo.server_api import ServerApi
+from pymongo.mongo_client import MongoClient
 "-------------------------------------------------------------"
 
 from pymongo import MongoClient
@@ -11,8 +13,6 @@ collection.insert_one(
 )
 
 "--------------------------------------------------------------"
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
 
 uri = "mongodb+srv://petermekhail01:<password>@netmindcluster.ecihb0u.mongodb.net/?retryWrites=true&w=majority&appName=netMindCluster"
 

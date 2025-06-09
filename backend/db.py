@@ -1,3 +1,6 @@
+from pymongo.server_api import ServerApi
+from pymongo.mongo_client import MongoClient
+from pymongo import MongoClient
 import sqlite3
 
 conn = sqlite3.connect("netmind_local_db.db")
@@ -26,7 +29,6 @@ for row in rows:
 conn.close()
 
 "-------------------------------------------------------------"
-from pymongo import MongoClient
 
 client = MongoClient("your-mongodb-atlas-uri")
 db = client["netmind"]
@@ -37,8 +39,6 @@ collection.insert_one(
 )
 
 "--------------------------------------------------------------"
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
 
 uri = "mongodb+srv://petermekhail01:<password>@netmindcluster.ecihb0u.mongodb.net/?retryWrites=true&w=majority&appName=netMindCluster"
 

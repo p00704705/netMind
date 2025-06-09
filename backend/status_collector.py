@@ -9,17 +9,17 @@ collector.py – Metric collector engine
         •	Later: could accept a YAML config file for dynamic targets
 """
 
-import os
-import subprocess
-import time
 import datetime
 import ipaddress
-import logging
 import json
+import logging
+import os
+import re
+import subprocess
 import sys
-import re
+import time
+
 import nmap
-import re
 
 logging.basicConfig(level=logging.DEBUG)
 

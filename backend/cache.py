@@ -1,10 +1,10 @@
 import json
-import time
 import logging
-from datetime import datetime, timedelta
+import time
 from abc import ABC, abstractmethod
+from datetime import datetime, timedelta
+
 import redis
-import json
 
 logging.basicConfig(level=logging.INFO)
 
