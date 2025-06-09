@@ -1,7 +1,8 @@
-from pymongo.server_api import ServerApi
-from pymongo.mongo_client import MongoClient
-from pymongo import MongoClient
 import sqlite3
+
+from pymongo import MongoClient
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 
 conn = sqlite3.connect("netmind_local_db.db")
 cursor = conn.cursor()
