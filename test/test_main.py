@@ -1,4 +1,4 @@
-from backend import db_sql
+import backend.db_sql as db_sql
 
 def test_table_creation():
     db_sql.create_table()
