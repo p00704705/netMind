@@ -11,6 +11,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      docker:
+        image: docker:dind
+    
     steps:
     - uses: actions/checkout@v3
 
