@@ -34,10 +34,8 @@ def insert_network_stats(network_data: Dict[str, Dict[str, Dict[str, list]]]):
             packet_loss_list = stats.get("packet_loss", [])
             avg_latency_list = stats.get("avg_latency", [])
 
-            packet_loss = float(
-                packet_loss_list[0]) if packet_loss_list else None
-            avg_latency = float(
-                avg_latency_list[0]) if avg_latency_list else None
+            packet_loss = float(packet_loss_list[0]) if packet_loss_list else None
+            avg_latency = float(avg_latency_list[0]) if avg_latency_list else None
 
             cursor.execute(
                 """
