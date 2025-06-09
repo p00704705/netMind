@@ -19,6 +19,23 @@ jobs:
       with:
         python-version: '3.11'
 
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libjpeg-dev \
+          libfreetype6-dev \
+          liblcms2-dev \
+          libopenjp2-7-dev \
+          libtiff5-dev \
+          libwebp-dev \
+          tcl8.6-dev tk8.6-dev python3-tk \
+          libcairo2-dev \
+          libcups2-dev \
+          libffi-dev \
+          build-essential \
+          pkg-config
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
