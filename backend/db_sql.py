@@ -28,6 +28,7 @@ def create_table():
 def insert_network_stats(network_data: Dict[str, Dict[str, Dict[str, list]]]):
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
+    logging.info(f"Inserting network data to SQL table:\n{network_data}")
 
     for subnet, ip_data in network_data.items():
         for ip, stats in ip_data.items():
@@ -36,7 +37,7 @@ def insert_network_stats(network_data: Dict[str, Dict[str, Dict[str, list]]]):
 
             packet_loss = float(packet_loss_list[0]) if packet_loss_list else None
             avg_latency = float(avg_latency_list[0]) if avg_latency_list else None
-
+            # print(packet_loss, avg_latency)
             cursor.execute(
                 """
                 INSERT INTO network_stats (ip_address, packet_loss, avg_latency)

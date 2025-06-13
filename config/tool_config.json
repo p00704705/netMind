@@ -8,7 +8,7 @@
     "uri": "@netmindcluster.ecihb0u.mongodb.net/?retryWrites=true&w=majority&appName=netMindCluster",
     "service": "mongodb+srv://",
     "user": "",
-    "password": "secure_password"
+    "password": ""
   },
     "local_cache": {
     "host": "192.168.1.100",

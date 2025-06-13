@@ -47,13 +47,13 @@ class Collector:
 
     def analyze_ping_results(self, ping_results):
         # Extract all packet loss values
-        packet_loss = re.findall(r"(\d+\.\d+)% packet loss", ping_results)
+        packet_loss = re.findall(r"(\d+|\d+\.\d+)% packet loss", ping_results)
 
         # Extract all average latencies
         avg_latency = re.findall(
-            r"round-trip min/avg/max/stddev = [\d.]+/([\d.]+)", ping_results
+            r"rtt min/avg/max/mdev = [\d.]+/([\d.]+)", ping_results
         )
 
-        # logging.info(f"Packet Loss Values:{packet_loss}")
-        # logging.info(f"Average Latencies:{avg_latency}")
+        logging.info(f"Packet Loss Values:{packet_loss}")
+        logging.info(f"Average Latencies:{avg_latency}")
         return packet_loss, avg_latency
