@@ -46,6 +46,6 @@ jobs:
       run: |
         pytest
 
-    - name: Lint with flake8
+    - name: Lint with flake8 (uses config)
       run: |
         flake8 backend tests
