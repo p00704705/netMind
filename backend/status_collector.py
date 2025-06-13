@@ -33,7 +33,12 @@ class Collector:
                 stderr=subprocess.PIPE,
                 text=True,
             )
-            stdoutdata, stderrdata = p.communicate()
+            try:
+                stdoutdata, stderrdata = p.communicate(timeout=10)
+            except subprocess.TimeoutExpired:
+                p.kill()
+                logging.error(f"Ping to {target} timed out.")
+                continue
             # logging.info(f"stdoutdata: \n{stdoutdata}")
             if stderrdata:
                 logging.info(f"stderrdata: \n{stderrdata}")
