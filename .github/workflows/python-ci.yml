@@ -48,4 +48,4 @@ jobs:
 
     - name: Lint with flake8 (uses config)
       run: |
-        flake8 backend tests
+        flake8 --config=setup.cfg
