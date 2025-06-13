@@ -29,10 +29,12 @@ def init_mongo_client():
         logging.info(f"Sending ping to confirm successful connection: {mon_client.admin.command('ping')}")
         return mon_client
     except Exception as e:
-        print(e)
+        logging.error(f"MongoDB connection failed: {e}")
+        exit(1)
 
 
 def insert_network_data_mondb(mon_client, network_stats_data={}):
+    logging.info(f"Inserting data into MongoDB:\n {network_stats_data}")
     db = mon_client["netmind"]
     collection = db["latency"]
     for subnet, hosts in network_stats_data.items():
