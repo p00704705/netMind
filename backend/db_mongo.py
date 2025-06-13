@@ -4,7 +4,6 @@ import logging
 import os
 import json
 from urllib.parse import quote_plus
-import datetime
 from datetime import datetime
 logging.basicConfig(level=logging.INFO)
 
@@ -15,22 +14,23 @@ def init_mongo_client():
     config_path = os.path.join(base_dir, "..", "config", "tool_config.json")
     with open(config_path) as f:
         config = json.load(f)
-    
+
     password = quote_plus(config['mongo_database']['password'])
-    
+
     uri = f"{config['mongo_database']['service']}{config['mongo_database']['user']}:{password}{config['mongo_database']['uri']}"
-    
+
     logging.info(f"Using MongoDB URI: {uri}")
-    
+
     # Create a new client and connect to the server
     mon_client = MongoClient(uri, server_api=ServerApi("1"))
-    
+
     # Send a ping to confirm a successful connection
     try:
         logging.info(f"Sending ping to confirm successful connection: {mon_client.admin.command('ping')}")
         return mon_client
     except Exception as e:
         print(e)
+
 
 def insert_network_data_mondb(mon_client, network_stats_data={}):
     db = mon_client["netmind"]
@@ -45,4 +45,3 @@ def insert_network_data_mondb(mon_client, network_stats_data={}):
                 "timestamp": datetime.utcnow()
             }
             collection.insert_one(document)
-    

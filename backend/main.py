@@ -1,6 +1,5 @@
 import json
 import logging
-import time
 import os
 import db_sql as sqldb
 from cache import RedisClient
@@ -55,10 +54,10 @@ def main():
     redis_client = RedisClient(host="localhost", port=6379, db=0)
 
     redis_client.set_cache(key="peter_latency_cache", data=network_stats, ttl=30)
-    #redis_client.get_cache(key="peter_latency_cache")
-    #print("trying again after 3 seconds")
-    #time.sleep(3)
-    #redis_client.get_cache(key="peter_latency_cache")
+    # redis_client.get_cache(key="peter_latency_cache")
+    # print("trying again after 3 seconds")
+    # time.sleep(3)
+    # redis_client.get_cache(key="peter_latency_cache")
     # redis_client.get_cache(key = "peter_latency_cache")
     print(network_stats)
     sqldb.create_table()
