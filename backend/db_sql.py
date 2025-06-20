@@ -1,50 +1,57 @@
 import logging
 import sqlite3
-from typing import Dict
+from typing import Dict, List
 
 logging.basicConfig(level=logging.INFO)
 
-DB_FILE = "netmind_local_db.db"
+DB_FILE = "netmind_local_db"
 
 
-def create_table():
-    conn = sqlite3.connect(DB_FILE)
+def create_table(subnet):
+    conn = sqlite3.connect(DB_FILE + "_" + str(subnet).replace("/", "_") + ".db")
     logging.info(f"Connecting to Sqlite3 DB at {conn}")
     cursor = conn.cursor()
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS network_stats (
             ip_address TEXT,
+            mac_address TEXT,
+            vendor TEXT,
             packet_loss REAL,
             avg_latency REAL,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
-    """
+        """
     )
     conn.commit()
     conn.close()
 
 
-def insert_network_stats(network_data: Dict[str, Dict[str, Dict[str, list]]]):
-    conn = sqlite3.connect(DB_FILE)
+def insert_network_stats(subnet, network_data: List[Dict[str, str]]):
+    conn = sqlite3.connect(DB_FILE + "_" + str(subnet).replace("/", "_") + ".db")
     cursor = conn.cursor()
     logging.info(f"Inserting network data to SQL table:\n{network_data}")
 
-    for subnet, ip_data in network_data.items():
-        for ip, stats in ip_data.items():
-            packet_loss_list = stats.get("packet_loss", [])
-            avg_latency_list = stats.get("avg_latency", [])
+    for entry in network_data:
+        ip = entry.get("ip")
+        mac = entry.get("mac")
+        vendor = entry.get("vendor")
+        packet_loss = float(entry.get("packet_loss", 0))
+        avg_latency = float(entry.get("avg_latency", 0))
 
-            packet_loss = float(packet_loss_list[0]) if packet_loss_list else None
-            avg_latency = float(avg_latency_list[0]) if avg_latency_list else None
-            # print(packet_loss, avg_latency)
-            cursor.execute(
-                """
-                INSERT INTO network_stats (ip_address, packet_loss, avg_latency)
-                VALUES (?, ?, ?)
-            """,
-                (ip, packet_loss, avg_latency),
+        cursor.execute(
+            """
+            INSERT INTO network_stats (
+                ip_address,
+                mac_address,
+                vendor,
+                packet_loss,
+                avg_latency
             )
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (ip, mac, vendor, packet_loss, avg_latency),
+        )
 
     conn.commit()
     conn.close()

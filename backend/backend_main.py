@@ -6,6 +6,8 @@ from cache import RedisClient
 from network_scanner import NmapScanner
 from status_collector import Collector
 import db_mongo as mongodb
+from utils.enrich_net_data import enrich_net_data
+
 logging.basicConfig(level=logging.INFO)
 
 
@@ -45,26 +47,32 @@ def main():
     network_stats = {}
     subnets = config["subnets"]
     subnets_scan_obj = NmapScanner(subnets).scan_network()
+    redis_client = RedisClient(host="localhost", port=6379, db=0)
+    mongodb_client = mongodb.init_mongo_client()
     for subnet in subnets:
-        hosts_ips = subnets_scan_obj.get(subnet).get("hosts_ips")
+        hosts_ips=[]
+        hosts_details = subnets_scan_obj.get(subnet).get("hosts")
+        logging.info(f"Hosts details are : {hosts_details}")
+        for host in hosts_details:
+            hosts_ips.append(host.get("ip"))
+
         print("---------")
-        print(hosts_ips)
+        logging.info(f"Hosts IPs are : {hosts_ips}")
         collector = Collector(hosts_ips)
         network_stats[subnet] = collector.run_test_ping()
-    redis_client = RedisClient(host="localhost", port=6379, db=0)
-
-    redis_client.set_cache(key="peter_latency_cache", data=network_stats, ttl=30)
+        enriched_net_data = enrich_net_data(hosts_details, network_stats.get(subnet))
+        redis_client.set_cache(key=subnet+"_network_latency_cache", data=enriched_net_data, ttl=30)
     # redis_client.get_cache(key="peter_latency_cache")
     # print("trying again after 3 seconds")
     # time.sleep(3)
     # redis_client.get_cache(key="peter_latency_cache")
     # redis_client.get_cache(key = "peter_latency_cache")
-    print(network_stats)
-    sqldb.create_table()
-    sqldb.insert_network_stats(network_stats)
+        logging.info(f"Subnet {subnet} has enriched network data : {enriched_net_data}")
+        sqldb.create_table(subnet)
+        sqldb.insert_network_stats(subnet, enriched_net_data)
     # sqldb.fetch_all_stats()
-    mongodb_client = mongodb.init_mongo_client()
-    mongodb.insert_network_data_mondb(mongodb_client, network_stats)
+    
+        mongodb.insert_network_data_mondb(mongodb_client, subnet, enriched_net_data)
 
 
 if __name__ == "__main__":

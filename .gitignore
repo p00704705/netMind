@@ -1,3 +1,5 @@
 PING
-netmind_local_db.db
+netmind_local_db*
 __pycache__
+backend/__pycache__/
+netMind/backend/__pycache__/

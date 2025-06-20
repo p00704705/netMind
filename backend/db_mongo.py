@@ -33,17 +33,16 @@ def init_mongo_client():
         exit(1)
 
 
-def insert_network_data_mondb(mon_client, network_stats_data={}):
+def insert_network_data_mondb(mon_client, subnet, network_stats_data):
     logging.info(f"Inserting data into MongoDB:\n {network_stats_data}")
     db = mon_client["netmind"]
     collection = db["latency"]
-    for subnet, hosts in network_stats_data.items():
-        for ip, metrics in hosts.items():
-            document = {
-                "subnet": subnet,
-                "ip": ip,
-                "packet_loss": float(metrics.get("packet_loss", ["0"])[0]),
-                "avg_latency": float(metrics["avg_latency"][0]) if metrics.get("avg_latency") and metrics["avg_latency"] else None,
-                "timestamp": datetime.utcnow()
-            }
-            collection.insert_one(document)
+    document = {
+        "subnet": subnet,
+        "scan_time": datetime.utcnow(),
+        "hosts": network_stats_data
+    }
+
+    result = collection.insert_one(document)
+    logging.info(f"Inserted scan for {subnet} with ID: {result.inserted_id}")
+
