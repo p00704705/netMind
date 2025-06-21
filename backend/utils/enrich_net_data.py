@@ -2,6 +2,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
+
 def enrich_net_data(hosts_details, network_stats):
     """
     Combine host scan info (IP, MAC, vendor) with network stats (packet loss, latency)
@@ -17,14 +18,8 @@ def enrich_net_data(hosts_details, network_stats):
         avg_latency_list = stat.get("avg_latency", [0])
         packet_loss = packet_loss_list[0] if packet_loss_list else "N/A"
         avg_latency = avg_latency_list[0] if avg_latency_list else "N/A"
-        
-        enriched_entry = {
-                  "ip": ip,
-                  "mac": host.get("mac"),
-                  "vendor": host.get("vendor"),
-                  "packet_loss": packet_loss,
-                  "avg_latency": avg_latency,
-                }
+
+        enriched_entry = {"ip": ip, "mac": host.get("mac"), "vendor": host.get("vendor"), "packet_loss": packet_loss, "avg_latency": avg_latency, }
         logging.info("Enriching entry: %s", enriched_entry)
 
         enrich_net_data.append({
@@ -35,4 +30,3 @@ def enrich_net_data(hosts_details, network_stats):
             "avg_latency": avg_latency,
         })
     return enrich_net_data
-

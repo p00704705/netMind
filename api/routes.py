@@ -1,13 +1,20 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from backend.network_scanner import NmapScanner
 from backend.status_collector import Collector
 import ipaddress
 from datetime import datetime
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from backend.cache import RedisClient
 import backend.db_sql as sqldb
+from fastapi.templating import Jinja2Templates
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 
 router = APIRouter()
+templates = Jinja2Templates(directory=TEMPLATE_DIR)
+print(dir(templates))
 
 
 @router.get("/ping")
@@ -39,14 +46,21 @@ def scan_and_collect(subnet: str):
     result[subnet] = stats
     return result
 
-@router.get("/net_stat")
-def get_net_stat(subnet: str):
+
+@router.get("/net_stat", response_class=HTMLResponse)
+def get_net_stat(request: Request, subnet: str):
     try:
         ipaddress.ip_network(subnet)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid subnet format")
     redis_client = RedisClient(host="localhost", port=6379, db=0)
-    result = redis_client.get_cache(key=subnet+"_network_latency_cache")
-    result =  sqldb.fetch_all_stats(subnet)
+    result = redis_client.get_cache(key=subnet + "_network_latency_cache")
+    result = sqldb.fetch_all_stats(subnet)
+    headers = ["IP", "MAC", "Vendor", "Packet Loss (%)", "Avg Latency (ms)", "Timestamp"]
 
-    return result
+    return templates.TemplateResponse("net_stat.html", {
+        "request": request,
+        "subnet": subnet,
+        "headers": headers,
+        "rows": result
+    })

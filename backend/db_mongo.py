@@ -45,4 +45,3 @@ def insert_network_data_mondb(mon_client, subnet, network_stats_data):
 
     result = collection.insert_one(document)
     logging.info(f"Inserted scan for {subnet} with ID: {result.inserted_id}")
-

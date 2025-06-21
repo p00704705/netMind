@@ -26,13 +26,13 @@ class NmapScanner:
         nm = nmap.PortScanner()
         subnet_scan__obj = {}
         logging.info(f"User input subnets are {self.subnets}")
-        
+
         for subnet in self.subnets:
             logging.info(f"Scanning subnet {subnet}")
             scan_output = nm.scan(subnet, arguments="-PR -sn --max-retries 0")
             logging.info(f"Scan output for subnet {subnet} is {scan_output}\n")
             hosts_details = []
-            
+
             for host in nm.all_hosts():
                 mac = nm[host]["addresses"].get("mac")
                 vendor = nm[host]["vendor"].get(mac, "") if mac else ""
@@ -46,7 +46,7 @@ class NmapScanner:
             logging.info(f"Hosts details for subnet {subnet} is {hosts_details}\n")
             scan_stats = nm.scanstats()
             logging.info(f"Scan stats for subnet {subnet} is {scan_stats}\n")
-            
+
             subnet_scan__obj[subnet] = {
                 "scan_stats": scan_stats,
                 "hosts": hosts_details,
