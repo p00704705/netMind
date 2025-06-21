@@ -61,7 +61,7 @@ def main():
         collector = Collector(hosts_ips)
         network_stats[subnet] = collector.run_test_ping()
         enriched_net_data = enrich_net_data(hosts_details, network_stats.get(subnet))
-        redis_client.set_cache(key=subnet+"_network_latency_cache", data=enriched_net_data, ttl=30)
+        redis_client.set_cache(key=subnet+"_network_latency_cache", data=enriched_net_data, ttl=3000)
     # redis_client.get_cache(key="peter_latency_cache")
     # print("trying again after 3 seconds")
     # time.sleep(3)

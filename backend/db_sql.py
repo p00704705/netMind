@@ -57,8 +57,8 @@ def insert_network_stats(subnet, network_data: List[Dict[str, str]]):
     conn.close()
 
 
-def fetch_all_stats():
-    conn = sqlite3.connect(DB_FILE)
+def fetch_all_stats(subnet):
+    conn = sqlite3.connect(DB_FILE + "_" + str(subnet).replace("/", "_") + ".db")
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM network_stats ORDER BY timestamp DESC")
@@ -69,3 +69,4 @@ def fetch_all_stats():
         print()
 
     conn.close()
+    return rows

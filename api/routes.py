@@ -4,6 +4,8 @@ from backend.status_collector import Collector
 import ipaddress
 from datetime import datetime
 from fastapi.responses import JSONResponse
+from backend.cache import RedisClient
+import backend.db_sql as sqldb
 
 router = APIRouter()
 
@@ -35,4 +37,16 @@ def scan_and_collect(subnet: str):
     hosts = scan_obj[subnet]["hosts_ips"]
     stats = Collector(hosts).run_test_ping()
     result[subnet] = stats
+    return result
+
+@router.get("/net_stat")
+def get_net_stat(subnet: str):
+    try:
+        ipaddress.ip_network(subnet)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid subnet format")
+    redis_client = RedisClient(host="localhost", port=6379, db=0)
+    result = redis_client.get_cache(key=subnet+"_network_latency_cache")
+    result =  sqldb.fetch_all_stats(subnet)
+
     return result
