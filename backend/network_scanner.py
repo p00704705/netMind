@@ -55,6 +55,6 @@ class NmapScanner:
 
         scan_end_time = time.perf_counter()
         network_scan_duration = scan_end_time - scan_start_time
-        logging.info(f"Network scan duration is {network_scan_duration} seconds")
+        logging.info(f"Network scan duration is {network_scan_duration} seconds\n")
 
         return subnet_scan__obj

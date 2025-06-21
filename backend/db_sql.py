@@ -36,8 +36,17 @@ def insert_network_stats(subnet, network_data: List[Dict[str, str]]):
         ip = entry.get("ip")
         mac = entry.get("mac")
         vendor = entry.get("vendor")
-        packet_loss = float(entry.get("packet_loss", 0))
-        avg_latency = float(entry.get("avg_latency", 0))
+        packet_loss = entry.get("packet_loss", 0)
+        avg_latency = entry.get("avg_latency", 0)
+        try:
+            packet_loss = float(packet_loss)
+        except (ValueError, TypeError):
+            packet_loss = None
+
+        try:
+            avg_latency = float(avg_latency)
+        except (ValueError, TypeError):
+            avg_latency = None
 
         cursor.execute(
             """
