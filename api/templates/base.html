@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}NetMind{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #007acc;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        nav {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            margin: 0 10px;
+            color: white;
+            text-decoration: underline;
+        }
+
+        .content {
+            margin-top: 20px;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        input, button {
+            padding: 6px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NetMind Dashboard</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/net_stat?subnet=192.168.1.0/24">View Stats</a>
+            <a href="/live_ip_scan?subnet=192.168.1.0/24">Run Scan</a>
+        </nav>
+    </header>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        &copy; 2025 NetMind. All rights reserved.
+    </footer>
+</body>
+</html>

@@ -1,44 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Network Stats for {{ subnet }}</title>
-  <style>
-    table {
-      border-collapse: collapse;
-      width: 100%;
-    }
-    th, td {
-      padding: 8px 12px;
-      border: 1px solid #ccc;
-      text-align: left;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-    tr:hover {
-      background-color: #f9f9f9;
-    }
-  </style>
-</head>
-<body>
-  <h2>Network Stats for {{ subnet }}</h2>
-  <table>
-    <thead>
-      <tr>
-        {% for header in headers %}
-        <th>{{ header }}</th>
-        {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for row in rows %}
-      <tr>
-        {% for cell in row %}
-        <td>{{ cell or '-' }}</td>
-        {% endfor %}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}NetMind - Network Stats{% endblock %}
+
+{% block content %}
+    <form method="get" action="/net_stat">
+        <input type="text" name="subnet" value="{{ subnet }}" placeholder="Enter subnet (e.g. 192.168.1.0/24)" required />
+        <input type="datetime-local" name="start_date" value="{{ start_date }}">
+        <input type="datetime-local" name="end_date" value="{{ end_date }}">
+        <button type="submit">View History</button>
+    </form>
+
+    {% if rows %}
+        <table>
+            <tr>
+                <th>IP</th>
+                <th>MAC</th>
+                <th>Vendor</th>
+                <th>Packet Loss (%)</th>
+                <th>Avg Latency (ms)</th>
+                <th>Timestamp</th>
+            </tr>
+            {% for row in rows %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td>{{ row[5] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No data available for subnet <strong>{{ subnet }}</strong>. Try scanning it first or adjust your date range.</p>
+    {% endif %}
+{% endblock %}

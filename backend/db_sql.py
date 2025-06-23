@@ -1,7 +1,7 @@
 import logging
 import sqlite3
 from typing import Dict, List
-
+import os
 logging.basicConfig(level=logging.INFO)
 
 DB_FILE = "netmind_local_db"
@@ -66,16 +66,41 @@ def insert_network_stats(subnet, network_data: List[Dict[str, str]]):
     conn.close()
 
 
-def fetch_all_stats(subnet):
-    conn = sqlite3.connect(DB_FILE + "_" + str(subnet).replace("/", "_") + ".db")
+def fetch_all_stats(subnet, start_date=None, end_date=None):
+    db_path = f"netmind_local_db_{subnet.replace('/', '_')}.db"
+
+    if not os.path.exists(db_path):
+        logging.warning(f"Database file for subnet {subnet} does not exist.")
+        return []
+
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM network_stats ORDER BY timestamp DESC")
-    rows = cursor.fetchall()
+    try:
+        query = """
+            SELECT ip_address, mac_address, vendor, packet_loss, avg_latency, timestamp
+            FROM network_stats
+            WHERE 1=1
+        """
+        params = []
 
-    for row in rows:
-        print(row)
-        print()
+        if start_date:
+            query += " AND timestamp >= ?"
+            params.append(start_date)
+        if end_date:
+            query += " AND timestamp <= ?"
+            params.append(end_date)
 
-    conn.close()
-    return rows
+        query += " ORDER BY timestamp DESC"
+
+        logging.info(f"Executing query: {query} with params: {params}")
+        cursor.execute(query, params)
+        rows = cursor.fetchall()
+        return rows
+    except sqlite3.OperationalError as e:
+        logging.error(f"SQLite error: {e}")
+        return []
+    finally:
+        conn.close()
+
+

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}NetMind - Home{% endblock %}
+
+{% block content %}
+    <h2>Welcome to NetMind</h2>
+    <p>Monitor, scan, and analyze your network devices in real time.</p>
+    <ul>
+        <li><a href="/live_ip_scan?subnet=192.168.1.0/24">Scan a subnet</a></li>
+        <li><a href="/net_stat?subnet=192.168.1.0/24">View subnet statistics</a></li>
+    </ul>
+{% endblock %}
