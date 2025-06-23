@@ -4,7 +4,7 @@ from backend.status_collector import Collector
 import ipaddress
 from datetime import datetime
 from fastapi.responses import JSONResponse, HTMLResponse
-from backend.cache import RedisClient
+
 import backend.db_sql as sqldb
 from fastapi.templating import Jinja2Templates
 import os

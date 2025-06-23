@@ -102,5 +102,3 @@ def fetch_all_stats(subnet, start_date=None, end_date=None):
         return []
     finally:
         conn.close()
-
-
